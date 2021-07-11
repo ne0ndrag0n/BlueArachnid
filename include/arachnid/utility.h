@@ -7,6 +7,6 @@
 /**
  * Copy distrusted string, clamping to upper bound
  */
-char* ar_copy_string( char* untrusted, int max_length );
+char* ar_copy_string( const char* untrusted, int max_length );
 
 #endif

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char* ar_copy_string( char* untrusted, int max_length ) {
+char* ar_copy_string( const char* untrusted, int max_length ) {
 	if( untrusted == NULL || max_length == 0 ) {
 		return NULL;
 	}
