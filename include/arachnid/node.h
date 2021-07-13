@@ -15,7 +15,7 @@
 /**
  * The maximum size string allocated to each node's string fields
  */
-#define AR_NODE_ID_LENGTH		256
+#define AR_NODE_ID_LENGTH	256
 #define AR_NODE_VALUE_LENGTH	1024
 
 /**
@@ -46,6 +46,23 @@ typedef struct ar_node_t {
 } ar_node_t;
 
 /**
+ * Selector
+ */
+typedef struct ar_selector_t {
+	char* namespace_id;
+	char* tag_id;
+	char* node_id;
+
+	ar_node_attribute_t** attributes;
+	int attributes_size;
+
+	char* pseudo;
+
+	bool is_wildcard;
+	bool is_immediate_child;
+} ar_selector_t;
+
+/**
  * Create a new node attribute type
  */
 ar_node_attribute_t* ar_create_node_attribute( const char* name, const char* value );
@@ -68,7 +85,7 @@ void ar_destroy_node( ar_node_t* node );
 /**
  * Add attribute object to node.
  */
-void ar_add_attribute( ar_node_t* target, ar_node_attribute_t* attribute );
+void ar_add_node_attribute( ar_node_t* target, ar_node_attribute_t* attribute );
 
 /**
  * Find attribute by name. Returns NULL if attribute not found.
@@ -94,5 +111,20 @@ void ar_delete_node_child( ar_node_t* target, ar_node_t* child );
  * Detach child from node. Parent node renounces ownership but item is not deallocated.
  */
 ar_node_t* ar_detach_child_node( ar_node_t* target, ar_node_t* child );
+
+/**
+ * Create selector
+ */
+ar_selector_t* ar_create_selector();
+
+/**
+ * Destroy selector
+ */
+void ar_destroy_selector( ar_selector_t* selector );
+
+/**
+ * Add attribute object to selector.
+ */
+void ar_add_selector_attribute( ar_selector_t* target, ar_node_attribute_t* attribute );
 
 #endif

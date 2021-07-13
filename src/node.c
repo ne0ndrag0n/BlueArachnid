@@ -46,15 +46,19 @@ void ar_destroy_node( ar_node_t* node ) {
 			ar_destroy_node_attribute( node->attributes[ i ] );
 		}
 
+		free( node->attributes );
+
 		for( int i = 0; i < node->children_size; i++ ) {
 			ar_destroy_node( node->children[ i ] );
 		}
+
+		free( node->children );
 
 		free( node );
 	}
 }
 
-void ar_add_attribute( ar_node_t* target, ar_node_attribute_t* attribute ) {
+void ar_add_node_attribute( ar_node_t* target, ar_node_attribute_t* attribute ) {
 	if( target != NULL && attribute != NULL ) {
 		// Verify elements do not already contain attribute->name
 		for( int i = 0; i < target->attributes_size; i++ ) {
@@ -152,5 +156,58 @@ ar_node_t* ar_detach_child_node( ar_node_t* target, ar_node_t* child ) {
 }
 
 
+ar_selector_t* ar_create_selector() {
+	ar_selector_t* selector = calloc( 1, sizeof( ar_selector_t ) );
 
+	selector->attributes = calloc( AR_INITIAL_CHILD_ELEMENTS, sizeof( ar_node_attribute_t* ) );
+	selector->attributes_size = AR_INITIAL_CHILD_ELEMENTS;
 
+	selector->is_wildcard = false;
+	selector->is_immediate_child = false;
+
+	return selector;
+}
+
+void ar_destroy_selector( ar_selector_t* selector ) {
+	free( selector->namespace_id );
+	free( selector->tag_id );
+	free( selector->node_id );
+
+	for( int i = 0; i < selector->attributes_size; i++ ) {
+		ar_destroy_node_attribute( selector->attributes[ i ] );
+	}
+
+	free( selector->attributes );
+
+	free( selector->pseudo );
+
+	free( selector );
+}
+
+void ar_add_selector_attribute( ar_selector_t* target, ar_node_attribute_t* attribute ) {
+        if( target != NULL && attribute != NULL ) {
+                // Verify elements do not already contain attribute->name
+                for( int i = 0; i < target->attributes_size; i++ ) {
+                        if( target->attributes[ i ] != NULL && strcmp( target->attributes[ i ]->name, attribute->name ) == 0 ) {
+                                // Cannot add a new attribute with the same name
+                                return;
+                        }
+                }
+
+                // Find the nearest NULL value and insert attribute
+                for( int i = 0; i < target->attributes_size; i++ ) {
+                        if( target->attributes[ i ] == NULL ) {
+                                target->attributes[ i ] = attribute;
+                                return;
+                        }
+                }
+
+                // If we got here, there wasn't any room in the existing list so realloc
+                int insert_index = target->attributes_size;
+
+                target->attributes_size += AR_INITIAL_CHILD_ELEMENTS;
+                target->attributes = realloc( target->attributes, target->attributes_size );
+
+                target->attributes[ insert_index ] = attribute;
+        }
+}
