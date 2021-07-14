@@ -5,7 +5,12 @@
 #ifndef AR_PARSER_H
 #define AR_PARSER_H
 
+#include <stdbool.h>
+
+#define AR_STYLESHEET_MAX_STRING_SIZE	255
+
 typedef enum ar_tokentype_t {
+	AR_TOKENTYPE_NULL,
 	AR_TOKENTYPE_WHITESPACE,
 	AR_TOKENTYPE_IDENTIFIER,
 	AR_TOKENTYPE_HASH,
@@ -17,7 +22,11 @@ typedef enum ar_tokentype_t {
 	AR_TOKENTYPE_BRACE_LEFT,
 	AR_TOKENTYPE_BRACE_RIGHT,
 	AR_TOKENTYPE_PAREN_LEFT,
-	AR_TOKENTYPE_PAREN_RIGHT
+	AR_TOKENTYPE_PAREN_RIGHT,
+	AR_TOKENTYPE_SEMICOLON,
+	AR_TOKENTYPE_LONG,
+	AR_TOKENTYPE_DOUBLE,
+	AR_TOKENTYPE_STRING
 } ar_tokentype_t;
 
 typedef struct ar_token_t {
@@ -29,9 +38,17 @@ typedef struct ar_token_t {
 	};
 } ar_token_t;
 
+typedef struct ar_token_result_t {
+	bool is_good;
+	union {
+		const char* as_error;
+		ar_token_t* as_value;
+	};
+} ar_token_result_t;
+
 /**
  * Read stylesheet and output tokens
  */
-ar_token_t* ar_tokenize_style( const char* body );
+ar_token_result_t* ar_tokenize_style( const char* body );
 
 #endif
