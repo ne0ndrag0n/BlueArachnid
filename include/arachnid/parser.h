@@ -32,16 +32,19 @@ typedef enum ar_tokentype_t {
 typedef struct ar_token_t {
 	ar_tokentype_t type;
 	struct ar_token_t* next;
+	int position_row;
+	int position_column;
 	union {
 		char* as_string;
-		long as_numeric;
+		long as_long;
+		double as_double;
 	};
 } ar_token_t;
 
 typedef struct ar_token_result_t {
 	bool is_good;
 	union {
-		const char* as_error;
+		char* as_error;
 		ar_token_t* as_value;
 	};
 } ar_token_result_t;
@@ -50,5 +53,10 @@ typedef struct ar_token_result_t {
  * Read stylesheet and output tokens
  */
 ar_token_result_t* ar_tokenize_style( const char* body );
+
+/**
+ * Destroy a token or list of tokens
+ */
+void ar_destroy_token( ar_token_t* token );
 
 #endif
