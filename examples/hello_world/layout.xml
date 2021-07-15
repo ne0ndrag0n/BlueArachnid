@@ -1,8 +1,0 @@
-<!doctype aml>
-<desktop>
-	<group id="two-boxes">
-		This item contains both text and child nodes!
-		<generic-item>First Child</generic-item>
-		<generic-item>Second Child</generic-item>
-	</group>
-</desktop>

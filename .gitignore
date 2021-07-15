@@ -1,2 +1,4 @@
 arachnid-test
 .*.swp
+Cargo.lock
+arachnid/target
